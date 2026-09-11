@@ -6,7 +6,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: mysql  # تأكد إن دي اللابيل بتاعت الداتابيز عندك
+      app: mysql  
   policyTypes:
   - Ingress
   ingress:
@@ -39,7 +39,6 @@ spec:
     - protocol: TCP
       port: 9000
   egress:
-  # 1. السماح بالتواصل مع الداتابيز
   - to:
     - podSelector:
         matchLabels:
@@ -47,7 +46,7 @@ spec:
     ports:
     - protocol: TCP
       port: 3306
-  # 2. السماح بالوصول للـ DNS (إجباري عشان اسم السيرفس يشتغل)
+      
   - to:
     - namespaceSelector:
         matchLabels:
