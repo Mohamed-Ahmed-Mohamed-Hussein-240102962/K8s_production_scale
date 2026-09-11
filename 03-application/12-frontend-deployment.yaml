@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-frontend
+  namespace: production
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-frontend
+  template:
+    metadata:
+      labels:
+        app: nginx-frontend
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      initContainers:
+      - name: copy-assets
+        image: moopsdev/my-laravel-app:latest
+        command: ["sh", "-c", "cp -r /var/www/html/public/* /shared-public/"]
+        volumeMounts:
+        - name: shared-public
+          mountPath: /shared-public
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+          name: http
+        volumeMounts:
+        - name: shared-public
+          mountPath: /var/www/html/public
+        - name: nginx-config-volume
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "250m"
+            memory: "256Mi"
+      volumes:
+      - name: shared-public
+        emptyDir: {}
+      - name: nginx-config-volume
+        configMap:
+          name: nginx-config
