@@ -15,6 +15,11 @@ spec:
     spec:
       imagePullSecrets:
       - name: regcred
+      tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Exists"
+        effect: "NoSchedule"
+        
       initContainers:
       - name: copy-assets
         image: moopsdev/my-laravel-app:latest
