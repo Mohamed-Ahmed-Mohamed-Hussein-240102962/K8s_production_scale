@@ -29,7 +29,7 @@ spec:
       initContainers:
       - name: run-migrations
         image: moopsdev/my-laravel-app:latest
-        command: ["php", "artisan", "migrate", "--seed", "--force"]
+        command: ["php", "artisan", "migrate", "--force"]
         envFrom:
         - configMapRef:
             name: app-config
